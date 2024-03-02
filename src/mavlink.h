@@ -176,6 +176,9 @@ class MavLink {
   inline void aircraft_mode(const int8_t val) {
     heartbeat_.aircraft_mode(val);
   }
+  inline void custom_mode(const int32_t val) {  // added MEH
+    heartbeat_.custom_mode(val);
+  }
   inline void aircraft_state(const int8_t val) {
     heartbeat_.aircraft_state(val);
   }

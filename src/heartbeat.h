@@ -28,6 +28,7 @@
 
 #if defined(ARDUINO)
 #include "Arduino.h"
+#include "elapsedMillis.h"
 #else
 #include "core/core.h"
 #endif
@@ -76,6 +77,7 @@ class MavLinkHeartbeat {
   */
   inline void throttle_enabled(const bool val) {throttle_enabled_ = val;}
   inline void aircraft_mode(const int8_t val) {aircraft_mode_ = val;}
+  inline void custom_mode(const uint32_t val) {custom_mode_ = val;} // added by MEH
   inline void aircraft_state(const int8_t val) {aircraft_state_ = val;}
   /* Update method */
   void Update();
@@ -87,7 +89,8 @@ class MavLinkHeartbeat {
   uint8_t sys_id_ = 1;
   int8_t aircraft_type_;
   uint8_t comp_id_ = MAV_COMP_ID_AUTOPILOT1;
-  static constexpr uint8_t autopilot_ = MAV_AUTOPILOT_GENERIC;
+  //static constexpr uint8_t autopilot_ = MAV_AUTOPILOT_GENERIC;
+  static constexpr uint8_t autopilot_ = MAV_AUTOPILOT_ARDUPILOTMEGA; // mission planner?
   /* Message buffer */
   mavlink_message_t msg_;
   uint16_t msg_len_;
@@ -102,7 +105,7 @@ class MavLinkHeartbeat {
   /* Heartbeat */
   void SendHeartbeat();
   /* Heartbeat variables */
-  static constexpr uint32_t custom_mode_ = 0;
+  uint32_t custom_mode_;
   uint8_t type_;
   uint8_t mode_;
   uint8_t state_;

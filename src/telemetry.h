@@ -28,6 +28,7 @@
 
 #if defined(ARDUINO)
 #include "Arduino.h"
+#include "elapsedMillis.h"
 #include "optional.hpp"
 #else
 #include <optional>

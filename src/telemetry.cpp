@@ -40,27 +40,63 @@ namespace bfs {
 namespace {
 
 /* Converts a +/- 180 value to a 0 - 360 value */
-template<typename T>
-T WrapTo2Pi(T ang) {
-  static_assert(std::is_floating_point<T>::value,
-                "Only floating point types supported");
-  ang = std::fmod(ang, BFS_2PI<T>);
-  if (ang < static_cast<T>(0)) {
-    ang += BFS_2PI<T>;
+//template<typename T>
+//T WrapTo2Pi(T ang) {
+//  static_assert(std::is_floating_point<T>::value,
+//                "Only floating point types supported");
+//  ang = std::fmod(ang, BFS_2PI<T>);
+//  if (ang < static_cast<T>(0)) {
+//    ang += BFS_2PI<T>;
+//  }
+//  return ang;
+//}
+
+float WrapTo2Pi(float ang) {
+  ang = std::fmod(ang, BFS_2PI_FLOAT);
+  if (ang < static_cast<float>(0)) {
+    ang += BFS_2PI_FLOAT;
+  }
+  return ang;
+}
+
+double WrapTo2Pi(double ang) {
+  ang = std::fmod(ang, BFS_2PI_DOUBLE);
+  if (ang < static_cast<double>(0)) {
+    ang += BFS_2PI_DOUBLE;
   }
   return ang;
 }
 
 /* Converts a 0 - 360 value to a +/- 180 value */
-template<typename T>
-T WrapToPi(T ang) {
-  static_assert(std::is_floating_point<T>::value,
-                "Only floating point types supported");
-  if (ang > BFS_PI<T>) {
-    ang -= BFS_2PI<T>;
+//template<typename T>
+//T WrapToPi(T ang) {
+//  static_assert(std::is_floating_point<T>::value,
+//                "Only floating point types supported");
+//  if (ang > BFS_PI<T>) {
+//    ang -= BFS_2PI<T>;
+//  }
+//  if (ang < -BFS_PI<T>) {
+//    ang += BFS_2PI<T>;
+//  }
+//  return ang;
+//}
+
+float WrapToPi(float ang) {
+  if (ang > BFS_PI_FLOAT) {
+    ang -= BFS_2PI_FLOAT;
   }
-  if (ang < -BFS_PI<T>) {
-    ang += BFS_2PI<T>;
+  if (ang < -BFS_PI_FLOAT) {
+    ang += BFS_2PI_FLOAT;
+  }
+  return ang;
+}
+
+double WrapToPi(double ang) {
+  if (ang > BFS_PI_DOUBLE) {
+    ang -= BFS_2PI_DOUBLE;
+  }
+  if (ang < -BFS_PI_DOUBLE) {
+    ang += BFS_2PI_DOUBLE;
   }
   return ang;
 }
@@ -148,7 +184,8 @@ void MavLinkTelemetry::SRx_EXT_STAT() {
   SendBatteryStatus();
 }
 void MavLinkTelemetry::SendSysStatus() {
-  sensors_present_ = 0;
+ // sensors_present_ = 0;
+  sensors_present_ = MAV_SYS_STATUS_SENSOR_MOTOR_OUTPUTS; // hack to get (SAFETY) message off MP HUD https://github.com/search?q=repo%3AArduPilot%2FMissionPlanner+%22%28SAFETY%29%22&type=code
   if (gyro_installed_) {
     sensors_present_ |= MAV_SYS_STATUS_SENSOR_3D_GYRO;
   }
@@ -171,7 +208,8 @@ void MavLinkTelemetry::SendSysStatus() {
     sensors_present_ |= MAV_SYS_STATUS_SENSOR_RC_RECEIVER;
   }
   /* Check sensor health */
-  sensors_healthy_ = 0;
+  //sensors_healthy_ = 0;
+  sensors_healthy_ = MAV_SYS_STATUS_SENSOR_MOTOR_OUTPUTS; // hack to get (SAFETY) message off MP HUD
   if (gyro_healthy_) {
     sensors_healthy_ |= MAV_SYS_STATUS_SENSOR_3D_GYRO;
   }

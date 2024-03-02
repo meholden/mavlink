@@ -61,6 +61,10 @@ void MavLinkHeartbeat::SendHeartbeat() {
     }
   }
   mode_ = 0;
+  // hack for custom mode enable (bit 0 set) MEH
+  if (custom_mode_ !=0) {
+	mode_ |= MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+  }
   if (throttle_enabled_) {
     mode_ |= MAV_MODE_FLAG_SAFETY_ARMED;
   }
