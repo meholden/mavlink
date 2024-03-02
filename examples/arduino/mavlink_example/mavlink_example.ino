@@ -45,6 +45,7 @@ void setup() {
   /* Starting serial to print results */
   Serial.begin(115200);
   while (!Serial) {}
+  Serial.println("here we go");
   /* Configuring MavLink serial port and aircraft type */
   mavlink.hardware_serial(&Serial4);
   mavlink.aircraft_type(bfs::FIXED_WING);
